@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .uploading {
+            display: none;
+        }
+
+        .loading-indicator {
+            display: inline-block;
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File Upload</h1>
+
+        {% if upload_successful %}
+            <p>Files uploaded successfully!</p>
+            <br>
+            <a href="{{ url_for('index') }}">Back to Home</a>
+        {% else %}
+            <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" onsubmit="startUpload()">
+                <input type="file" name="files" multiple accept=".mp4, .avi, .mkv, .jpg, .jpeg, .png, .pdf">
+                <br><br>
+                <div id="uploadButton">
+                    <input type="submit" value="Upload">
+                </div>
+                <div id="uploadingMessage" class="uploading">
+                    Uploading...
+                    <span class="loading-indicator"></span>
+                </div>
+            </form>
+
+            <h2>Uploaded Files</h2>
+            {% for upload in uploads %}
+                <p>{{ upload[1] }}: <a href="{{ upload[2] }}" target="_blank">View</a></p>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <script>
+        function startUpload() {
+            document.getElementById('uploadButton').style.display = 'none';
+            document.getElementById('uploadingMessage').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>
